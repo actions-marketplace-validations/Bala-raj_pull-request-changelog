@@ -35,7 +35,7 @@ jobs:
       - uses: bala-raj/pull-request-changelog@master
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ pass here you base }}
+          branch: ${{ github.event.pull_request.base.ref }}
 ```
 
 [See the result...](https://github.com/etcdigital/pull-request-changelog/pull/1#issuecomment-625586295)
