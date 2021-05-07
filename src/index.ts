@@ -9,6 +9,7 @@ const pull_request = github.context.payload.pull_request;
 const PR_ID = pull_request.number;
 const URL = pull_request.comments_url;
 const GITHUB_TOKEN = core.getInput('token') || process.env.token;
+const branch = core.getInput('branch');
 
 const postToGit = async (url, key, body) => {
   const rawResponse = await fetch(url, {
@@ -34,6 +35,9 @@ const postToGit = async (url, key, body) => {
     if (GITHUB_TOKEN === undefined) {
       throw new Error('Missing auth thoken');
     }
+    if (branch === undefined) {
+      throw new Error('Missing branch');
+    }
     console.log('Generating changelog....');
 
     await exec(gitPrume);
@@ -45,7 +49,7 @@ const postToGit = async (url, key, body) => {
     let myError = '';
 
     // get diff between master and current branch
-    await exec(getCommits(PR_ID), [], {
+    await exec(getCommits(PR_ID, branch), [], {
       listeners: {
         stdout: (data) => {
           const splitted = data.toString().split('\n');
@@ -85,7 +89,7 @@ const postToGit = async (url, key, body) => {
                   .toString()
                   .split('\n')
                   .filter((i) => i);
-                resolve();
+                resolve(undefined);
               },
               stderr: (data) => {
                 myError = `${myError}${data.toString()}`;
