@@ -9,8 +9,8 @@ We need that to access git changes. See usage example under.
 
 ## How it works
 
-Whenever you open a PR to `master` branch, action will compare `master` branch with your branch and
-post a comment to PR with all the changes that are going to be merged to `master` branch.
+Whenever you open a PR to base branch, action will compare base branch with your branch and
+post a comment to PR with all the changes that are going to be merged to base branch.
 
 There are a few assumptions that you should be aware, when you're using this action.
 
@@ -32,9 +32,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: etcdigital/pull-request-changelog@master
+      - uses: bala-raj/pull-request-changelog@master
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ pass here you base }}
 ```
 
 [See the result...](https://github.com/etcdigital/pull-request-changelog/pull/1#issuecomment-625586295)
