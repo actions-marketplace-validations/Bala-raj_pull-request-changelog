@@ -9,3 +9,5 @@ export const getCommits = (pullRequestId, branch): string =>
 
 export const changeFiles = (sha): string =>
   `git diff-tree --no-commit-id --name-only -r ${sha}`;
+
+export const setBumpType = (type: string): string => `echo ::set-output name=bump-type::${type}`;
