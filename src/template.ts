@@ -5,8 +5,19 @@ import { changesHeader, getHeader } from './headers';
 import { getMessageDetails } from './message';
 import { getMarkdownOfHead } from './markdown';
 
+const VERSION_FRAGMENT = {
+  MAJOR: "major",
+  FEATURE: "feature", 
+  BUG: "bug",
+  ALPHA: "alpha",
+  BETA: "beta",
+  RC: "rc"
+}
+
 const breakline = `
 `;
+
+let versionBumpType = "";
 
 let changes: IChanges[] = [];
 
@@ -41,40 +52,63 @@ const prepareOutput = (sha, contentObject) => {
   });
 };
 
-export default function MakeTemplate(commits): string {
+interface MakeTemplate {
+  changesTemplate: string;
+  versionBumpType: string;
+}
+
+export default function MakeTemplate(commits): MakeTemplate {
   Object.keys(commits).forEach((sha) => prepareOutput(sha, commits[sha]));
 
   let changesTemplate: string[] = [];
 
+  const majorUpdate = changes['mjr']; 
+  
+
+
   const featLogs = changes['feat'];
   if (featLogs) {
+    if(!versionBumpType.length) versionBumpType = VERSION_FRAGMENT.FEATURE
     changesTemplate.push(getMarkdownOfHead('## ✨ Features', featLogs));
   }
 
   const fixLogs = changes['fix'];
   if (fixLogs) {
+    if(!versionBumpType.length) versionBumpType = VERSION_FRAGMENT.BUG
     changesTemplate.push(getMarkdownOfHead('## 🐞 Fixes', fixLogs));
   }
 
   const refactorLogs = changes['refactor'];
   if (refactorLogs) {
+    if(versionBumpType.length > 0) versionBumpType = VERSION_FRAGMENT.BUG
     changesTemplate.push(getMarkdownOfHead('## ♻️ Refactors', refactorLogs));
   }
 
   let testLogs = changes['test'];
   if (testLogs) {
+    if(!versionBumpType.length) versionBumpType = VERSION_FRAGMENT.BUG
     changesTemplate.push(getMarkdownOfHead('## 🧪 Tests', testLogs));
   }
 
   const ciLogs = changes['ci'];
   if (ciLogs) {
+    if(!versionBumpType.length) versionBumpType = VERSION_FRAGMENT.BUG
     changesTemplate.push(getMarkdownOfHead('## 🏗 CI', ciLogs));
+  }
+
+  const botLogs = changes['bot']
+  if(botLogs) {
+    if(versionBumpType.length > 0) versionBumpType = VERSION_FRAGMENT.RC
   }
 
   const changesLogs = changes[changesHeader];
   if (changesLogs) {
+    if(!versionBumpType.length) versionBumpType = VERSION_FRAGMENT.BUG
     changesTemplate.push(getMarkdownOfHead('## 📋 Changes', changesLogs));
   }
 
-  return changesTemplate.join(`${breakline}${breakline}`);
+  return { 
+    changesTemplate: changesTemplate.join(`${breakline}${breakline}`), 
+    versionBumpType: versionBumpType
+  };
 }
