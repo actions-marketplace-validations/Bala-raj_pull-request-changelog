@@ -102,7 +102,7 @@ export default function MakeTemplate(commits): MakeTemplate {
   }
 
   const changesLogs = changes[changesHeader];
-  
+
   if (changesLogs) {
     if(!versionBumpType.length) versionBumpType = VERSION_FRAGMENT.BUG
     changesTemplate.push(getMarkdownOfHead('## 📋 Changes', changesLogs));
@@ -112,6 +112,6 @@ export default function MakeTemplate(commits): MakeTemplate {
 
   return { 
     changesTemplate: changesTemplate.join(`${breakline}${breakline}`), 
-    versionBumpType: versionBumpType
+    versionBumpType
   };
 }
