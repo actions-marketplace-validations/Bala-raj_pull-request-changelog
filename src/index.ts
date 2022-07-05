@@ -104,7 +104,8 @@ const postToGit = async (url, key, body) => {
     const { changesTemplate, versionBumpType } = makeTemplate(commits);
     core.debug("Version Type" + versionBumpType);
     await postToGit(URL, GITHUB_TOKEN, changesTemplate);
-    await exec(setBumpType(versionBumpType)); // Bump Type would be available in the variable `bump-type`
+    core.setOutput("bump-type", versionBumpType)
+    // await exec(setBumpType(versionBumpType)); // Bump Type would be available in the variable `bump-type`
   } catch (e) {
     console.log(e);
     process.exit(1);
