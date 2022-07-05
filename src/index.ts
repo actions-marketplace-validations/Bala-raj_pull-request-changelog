@@ -3,7 +3,7 @@ import { exec } from '@actions/exec';
 import * as github from '@actions/github';
 import * as core from '@actions/core';
 import makeTemplate from './template';
-import { gitNoTag, changeFiles, getCommits, gitPrume, setBumpType } from './commands';
+import { gitNoTag, changeFiles, getCommits, gitPrume } from './commands';
 
 const pull_request = github.context.payload.pull_request;
 const PR_ID = pull_request.number;
@@ -103,9 +103,9 @@ const postToGit = async (url, key, body) => {
 
     const { changesTemplate, versionBumpType } = makeTemplate(commits);
     core.debug("Version Type" + versionBumpType);
-    await postToGit(URL, GITHUB_TOKEN, changesTemplate);
+    console.log("Version Bump Type", versionBumpType);
     core.setOutput("bump-type", versionBumpType)
-    // await exec(setBumpType(versionBumpType)); // Bump Type would be available in the variable `bump-type`
+    await postToGit(URL, GITHUB_TOKEN, changesTemplate);
   } catch (e) {
     console.log(e);
     process.exit(1);
