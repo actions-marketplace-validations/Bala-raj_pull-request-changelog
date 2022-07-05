@@ -102,8 +102,7 @@ const postToGit = async (url, key, body) => {
     await Promise.all(shaKeys);
 
     const { changesTemplate, versionBumpType } = makeTemplate(commits);
-    core.debug("Version Type" + versionBumpType);
-    console.log("Version Bump Type", versionBumpType);
+    console.log("Version Bump Type" + versionBumpType);
     core.setOutput("bump-type", versionBumpType)
     await postToGit(URL, GITHUB_TOKEN, changesTemplate);
   } catch (e) {

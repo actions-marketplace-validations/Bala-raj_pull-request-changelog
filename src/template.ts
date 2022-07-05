@@ -62,19 +62,15 @@ export default function MakeTemplate(commits): MakeTemplate {
 
   let changesTemplate: string[] = [];
 
-  const majorUpdate = changes['mjr']; 
-  
-
-
   const featLogs = changes['feat'];
   if (featLogs) {
-    if(!versionBumpType.length) versionBumpType = VERSION_FRAGMENT.FEATURE
+    if(versionBumpType.length == 0) versionBumpType = VERSION_FRAGMENT.FEATURE
     changesTemplate.push(getMarkdownOfHead('## ✨ Features', featLogs));
   }
 
   const fixLogs = changes['fix'];
   if (fixLogs) {
-    if(!versionBumpType.length) versionBumpType = VERSION_FRAGMENT.BUG
+    if(versionBumpType.length == 0) versionBumpType = VERSION_FRAGMENT.BUG
     changesTemplate.push(getMarkdownOfHead('## 🐞 Fixes', fixLogs));
   }
 
@@ -86,29 +82,29 @@ export default function MakeTemplate(commits): MakeTemplate {
 
   let testLogs = changes['test'];
   if (testLogs) {
-    if(!versionBumpType.length) versionBumpType = VERSION_FRAGMENT.BUG
+    if(versionBumpType.length == 0) versionBumpType = VERSION_FRAGMENT.BUG
     changesTemplate.push(getMarkdownOfHead('## 🧪 Tests', testLogs));
   }
 
   const ciLogs = changes['ci'];
   if (ciLogs) {
-    if(!versionBumpType.length) versionBumpType = VERSION_FRAGMENT.BUG
+    if(versionBumpType.length == 0) versionBumpType = VERSION_FRAGMENT.BUG
     changesTemplate.push(getMarkdownOfHead('## 🏗 CI', ciLogs));
   }
 
   const botLogs = changes['bot']
   if(botLogs) {
-    if(!versionBumpType.length) versionBumpType = VERSION_FRAGMENT.RC
+    if(versionBumpType.length == 0) versionBumpType = VERSION_FRAGMENT.RC
   }
 
   const changesLogs = changes[changesHeader];
 
   if (changesLogs) {
-    if(!versionBumpType.length) versionBumpType = VERSION_FRAGMENT.BUG
+    if(versionBumpType.length == 0) versionBumpType = VERSION_FRAGMENT.BUG
     changesTemplate.push(getMarkdownOfHead('## 📋 Changes', changesLogs));
   }
 
-  if(!versionBumpType.length) versionBumpType = VERSION_FRAGMENT.BUG
+  if(versionBumpType.length == 0) versionBumpType = VERSION_FRAGMENT.BUG
 
   return { 
     changesTemplate: changesTemplate.join(`${breakline}${breakline}`), 
