@@ -10,6 +10,7 @@ const PR_ID = pull_request.number;
 const URL = pull_request.comments_url;
 const GITHUB_TOKEN = core.getInput('token') || process.env.token;
 const branch = core.getInput('branch');
+const currentVersion = core.getInput('version');
 
 const postToGit = async (url, key, body) => {
   const rawResponse = await fetch(url, {
@@ -103,9 +104,20 @@ const postToGit = async (url, key, body) => {
 
     const { changesTemplate, versionBumpType } = makeTemplate(commits);
     await postToGit(URL, GITHUB_TOKEN, changesTemplate);
-
-    core.setOutput("bump-type", versionBumpType);
     core.setOutput("content", changesTemplate);
+
+    await exec('chmod +x ./src/version-script.sh');
+    await exec('./src/version-script.sh',[currentVersion, (versionBumpType || 'bug')], {
+      listeners: {
+        stdout: (data) => {          
+          core.setOutput("next-version", data);
+        },
+        stderr: (data) => {
+          myError = `${myError}${data.toString()}`;
+        },
+      },
+    });   
+    
   } catch (e) {
     console.log(e);
     process.exit(1);
