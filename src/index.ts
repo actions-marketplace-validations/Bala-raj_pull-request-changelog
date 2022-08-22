@@ -75,11 +75,7 @@ const postToGit = async (url, key, body) => {
       },
     });
 
-    // If there were errors, we throw it
-    if (myError !== '') {
-      throw new Error(myError);
-    }
-
+ 
     const shaKeys = Object.keys(commits).map(
       (sha) =>
         new Promise((resolve, reject) => {
@@ -103,8 +99,7 @@ const postToGit = async (url, key, body) => {
     await Promise.all(shaKeys);
 
     const { changesTemplate, versionBumpType } = makeTemplate(commits);
-    await postToGit(URL, GITHUB_TOKEN, changesTemplate);
-    core.setOutput("content", changesTemplate);
+
 
     await exec('chmod +x ./src/version-script.sh');
     await exec('./src/version-script.sh',[currentVersion, (versionBumpType || 'bug')], {
@@ -117,9 +112,19 @@ const postToGit = async (url, key, body) => {
         },
       },
     });   
+
+
+    await postToGit(URL, GITHUB_TOKEN, changesTemplate);
+    core.setOutput("content", changesTemplate);
+    
+       // If there were errors, we throw it
+    if (myError !== '') {
+        throw new Error(myError);
+    }
+  
     
   } catch (e) {
-    console.log(e);
+    console.error('Failed due to : ',e);
     process.exit(1);
   }
 })();
