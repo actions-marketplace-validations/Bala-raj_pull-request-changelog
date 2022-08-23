@@ -13,12 +13,9 @@ inputs:
     description: "As provided by Github Actions"
 outputs:
   next-version:
-    description: "Next bumped version"
-    value: ${{ steps.change-logs.outputs.next-version }}
+    description: "Next bumped version"   
   content:
     description: "Changes logs content"
-    value: ${{ steps.change-logs.outputs.content }}
 runs:
   using: "node12"
   main: "dist/index.js"
-  id: "change-logs"
