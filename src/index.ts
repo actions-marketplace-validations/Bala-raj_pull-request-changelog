@@ -100,11 +100,15 @@ const postToGit = async (url, key, body) => {
     await Promise.all(shaKeys);
 
     const { changesTemplate, versionMask } = makeTemplate(commits);
-    const nextVersion = bumpVersion(versionMask, currentVersion);
+
 
     await postToGit(URL, GITHUB_TOKEN, changesTemplate);
     core.setOutput("content", changesTemplate);
-    core.setOutput("next-version", nextVersion);
+    
+    if(currentVersion) {
+      const nextVersion = bumpVersion(versionMask, currentVersion);
+      core.setOutput("next-version", nextVersion);
+    }
 
        // If there were errors, we throw it
     if (myError !== '') {
