@@ -16,7 +16,7 @@ let changes: IChanges[] = [];
 //
 
 const constructChangedFiles = (contentObject) => {
-  if (Array.isArray(contentObject.files)) {
+  if (contentObject.files && Array.isArray(contentObject.files)) {
     return `${breakline}#### Changed files${breakline}${contentObject.files
         .map((file) => `- ${file}`)
         .join('\n')}`
