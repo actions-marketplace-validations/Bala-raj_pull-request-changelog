@@ -8,8 +8,6 @@ import {bumpVersion} from "./version";
 
 const pull_request = github.context.payload.pull_request;
 const repository = github.context.payload.repository;
-const baseBranch = process.env.BASE_BRANCH;
-const headBranch = process.env.HEAD_BRANCH;
 const PR_ID = pull_request.number;
 const URL = pull_request.comments_url;
 const GITHUB_TOKEN = core.getInput('token') || process.env.token;
