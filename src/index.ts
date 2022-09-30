@@ -73,30 +73,27 @@ const postToGit = async (url, key, body) => {
           commitsStr = `${commitsStr}${data.toString()}`;
         },
         stderr: (data) => {
+          console.log(`${myError}${data.toString()}`)
           myError = `${myError}${data.toString()}`;
         },
       },
     });
 
- 
     const shaKeys = Object.keys(commits).map(
       (sha) =>
-        new Promise((resolve, reject) => {
           exec(changeFiles(sha), [], {
             listeners: {
               stdout: (data) => {
                 commits[sha].files = data
-                  .toString()
-                  .split('\n')
-                  .filter((i) => i);
-                resolve(undefined);
+                    .toString()
+                    .split('\n')
+                    .filter((i) => i);
               },
               stderr: (data) => {
-                myError = `${myError}${data.toString()}`;
+                console.log(`${myError}${data.toString()}`)
               },
             },
-          });
-        }),
+          })
     );
 
     await Promise.all(shaKeys);
